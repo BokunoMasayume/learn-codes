@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>boxShadow</title>
+</head>
+<body>
+
+<p><strong>这是原图</strong></p>
+<img id="imageOrigin" src="123.png" />
+<p><strong>这是处理之后的</strong></p>
+<div id="boxShadow"></div>
+
+<div style="background-color: blue;">
+<img  id="iii"/>
+</div>
+<script>
+if ( typeof window.screenX !== "undefined") {
+    
+// logo颜色，rgb
+
+    var r = 0x0a;
+    var g = 0x1d;
+    var b = 0x4d;
+
+
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d");
+    // var width = 344, height = 126;
+    var width = 172, height = 63;
+    canvas.width = width;
+    canvas.height = height;
+    
+    var imageOrigin = document.getElementById("imageOrigin");
+    var boxShadow = document.getElementById("boxShadow");
+    var funBoxShadow = function() {
+        context.drawImage(imageOrigin, 0, 0, width, height);
+        // alert("context"+context);
+        var imageData = context.getImageData(0, 0, width, height);
+     
+        var arrBoxShadow = [], length = imageData.data.length;
+        // 遍历颜色参数值
+        console.log(length);
+      
+        for (var index = 0; index < length; index++) {        
+            if (index % 4 === 0) {
+                // alert("1 "+imageData.data[index].toString(16));
+                // alert("2 "+imageData.data[index+1].toString(16));
+                // alert("3 "+imageData.data[index+2].toString(16));
+                // alert("4 "+imageData.data[index+3].toString(16));
+                var x = index / 4 % width, y = Math.floor(index / 4 / width);
+                if(imageData.data[index]==0xff && imageData.data[index + 1]==0xff && imageData.data[index + 2]==0xff)
+                {
+                    // alert("before: "+imageData.data[index+3]);
+                    imageData.data[index+3]=0;
+                    // alert("after: "+imageData.data[index+3]);
+                }
+                // else{
+                //     imageData.data[index]=r;
+                //     imageData.data[index + 1]=g;
+                //     imageData.data[index + 2]=b;
+                // }
+                
+                    
+            }
+        };
+        context.putImageData(imageData,0,0);
+        // var imAge = new Image();
+        // imAge.src = canvas.toDataURL("image/png");
+        // alert(imAge.src);
+        var iii = document.getElementById('iii');
+        iii.src = canvas.toDataURL("image/png");
+    };//funBoxShadow
+    
+    if (imageOrigin.height === height) {
+        // has cached
+      
+        funBoxShadow();
+    } else {    
+       
+        imageOrigin.onload = funBoxShadow;
+    }
+    
+    boxShadow.style.width = boxShadow.style.height = "1px";
+    boxShadow.style.margin = "-1px 0 0 -1px";
+} else {
+    document.getElementById("boxShadow").innerHTML = '当前浏览器low了点~~';	
+   
+};
+</script>
+</body>
+</html>
