@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+<div id="box" style="width:252px;font:25px/25px 宋体;background:black;color:yellow;border:red 20px ridge;text-shadow:2px 3px 1px #green;">
+
+</div>
+<script>
+var map=eval("["+Array(23).join("0x801,")+"0xfff]");
+// map是游戏区各块图形信息，每个元素代表一行，元素二进制的每一位代表一列
+// 游戏区有22行，10列
+// eval():将字符串转换成JS代码并执行
+// Array(23)：创建一个23个空元素的数组。
+// arrayObject.join(arg)：将数组转换为字符串，arg为字符串中分割元素的字符串，为空时为","。
+var tatris=[[0x6600],[0x2222,0xf00],[0xc600,0x2640],[0x6c00,0x4620],[0x4460,0x2e0,0x6220,0x740],[0x2260,0xe20,0x6440,0x4700],[0x2620,0x720,0x2320,0x2700]];
+// tatris七个元素，是七种图形，每个子数组的每个元素是一种翻转的图形
+// 
+var keycom={"38":"rotate(1)","40":"down()","37":"move(2,1)","39":"move(0.5,-1)"};
+// 定义键盘各键触发的函数。
+var dia, pos, bak, run;
+function start(){//随机生成初始形状，大概。。。
+    dia=tatris[~~(Math.random()*7)];
+//dia初始图形 
+// ~~(Math.random()*7)：将该数转换成32位有符号整数
+// Math.random()生成个0~1的随机数
+    bak=pos={fk:[],y:0,x:4,s:~~(Math.random()*4)};
+// pos的x属性是到游戏区右侧边缘的距离
+// pos的s属性是图形的翻转情况
+// fk是图形所处的四行游戏区的状态
+
+
+    rotate(0);
+//为了给fk[]填值 
+
+}
+
+function over(){//游戏结束时调用的函数
+    document.onkeydown=null;
+// 让键盘不在起效
+    clearInterval(run);
+// 不再刷新
+    alert("GAME OVER");
+// 提示游戏结束
+}
+function update(t){
+    bak={fk:pos.fk.slice(0),y:pos.y,x:pos.x,s:pos.s};
+
+    if(t) return;
+
+    for(var i=0,a2=""; i<22; i++)//将map转化成真的地图第一步。
+
+        a2+=map[i].toString(2).slice(1,-1)+"<br/>";
+    // numberObject.toString(radix)：radix是基数。即数字转换成字符串可以选择基数
+    // 经过这句，0x801会变成0000000000<br/>或1111111111<br/>
+    for(var i=0,n; i<4; i++)
+
+        if(/([^0]+)/.test(bak.fk[i].toString(2).replace(/1/g,"\u25a1")))
+
+            // \u25a1是空心方块，\u25a0是实心方块，\u3000是空格
+            // regexpObject.test(string):检验字符串是否匹配正则式，返回true或false
+            // stringObject.replace(regexp/substr,替换后的子字符串)
+
+            a2=a2.substr(0,n=(bak.y+i+1)*15-RegExp.$_.length-4)+RegExp.$1+a2.slice(n+RegExp.$1.length);
+            // alert(RegExp.$_.length+"  "+RegExp.$_);
+
+            // RegExp.$1~$9返回上一次正则表达式匹配中第n个子表达式所匹配的文本。就是说是个字符串
+            // RegExp.$_又名RegExp.input,返回执行正则表达式针对的字符串
+
+    document.getElementById("box").innerHTML=a2.replace(/1/g,"\u25a0").replace(/0/g,"\u3000");
+
+
+}
+function is(){
+//好像是判断是否消除满行的 
+// 又好像是判断何时停止下落的
+    for(var i=0; i<4; i++)
+        if((pos.fk[i]&map[pos.y+i])!=0) //if条件成立时应在前一状态停止下落
+            return pos=bak;
+            // return pos;会导致最下一行无论如何都被削掉
+            // 所以bak大概是上一步的位置，
+        
+    // & 按位执行布尔与操作
+}
+function rotate(r){
+    var f=dia[pos.s=(pos.s+r)%dia.length];
+    // pos.s是图形的旋转状态下标
+    // f是具体的图形（图形和旋转情况都已确定）
+    for(var i=0; i<4; i++)
+        pos.fk[i]=(f>>(12-i*4)&15)<<pos.x;
+    // pos.fk[]存储图形所在四行的状态（理想）
+    update(is());
+}
+function down(){
+    ++pos.y;
+    if(is()){//is()返回true,说明该积木该停了
+       for(var i=0; i<4 && pos.y+i<22; i++)
+            if((map[pos.y+i]|=pos.fk[i])==0xfff)//判断一行是不是满了
+                map.splice(pos.y+i,1), map.unshift(0x801);
+                // 删除本行，在最上边添一空行
+        if(map[1]!=0x801) return over();
+        // gameover条件
+        start();    
+    }
+    update();
+}
+function move(t,k){//k用来更新pos的x属性，t用来更新pos的pk[]属性（左移 右移）
+    pos.x+=k;   
+    for(var i=0; i<4; i++)
+        pos.fk[i]*=t;
+    update(is());
+}
+document.onkeydown=function(e){
+    eval(keycom[(e?e:event).keyCode]);
+};
+start();
+run=setInterval("down()",1000);
+</script>
+</body>
+<html>
