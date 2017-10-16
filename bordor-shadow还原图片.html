@@ -11,7 +11,7 @@
 <body>
 
 <p><strong>这是原图</strong></p>
-<img id="imageOrigin" src="shutter_1.jpg" />
+<img id="imageOrigin" src="123.png" />
 <p><strong>这是box-shadow生成的</strong></p>
 <div id="boxShadow"></div>
 <script>
@@ -19,7 +19,7 @@ if ( typeof window.screenX !== "undefined") {
     
     var canvas = document.createElement("canvas");
     var context = canvas.getContext("2d");
-    var width = 1000, height = 358;
+    var width = 172, height = 63;
     canvas.width = width;
     canvas.height = height;
     
@@ -27,12 +27,13 @@ if ( typeof window.screenX !== "undefined") {
     var boxShadow = document.getElementById("boxShadow");
     var funBoxShadow = function() {
         context.drawImage(imageOrigin, 0, 0, width, height);
-        alert("context"+context);
+        // alert("context"+context);
         var imageData = context.getImageData(0, 0, width, height);
             // 为了防止跨站攻击，getImageData()只能获取同源文件，因而必须在服务器环境下才能奏效
         var arrBoxShadow = [], length = imageData.data.length;
         // 遍历颜色参数值
-        console.log(length);
+        alert("?");
+        alert(imageData);
       
         for (var index = 0; index < length; index++) {        
             if (index % 4 === 0) {
@@ -43,6 +44,7 @@ if ( typeof window.screenX !== "undefined") {
                 ")");    
             }
         };
+        
         
         boxShadow.style.boxShadow = arrBoxShadow.join();
     };//funBoxShadow

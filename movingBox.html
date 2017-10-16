@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style type="css/text">
+
+
+  	</style>
+  </head>
+  <body>
+  	<canvas id="place"></canvas>
+
+
+
+  	<script>
+  		var place = document.getElementById('place');
+  		var ctx = place.getContext('2d');
+  		place.width=5000
+  		place.height = 1000
+  		place.style.border="3px solid black";
+      var fang  ;
+      var speed=2
+  		var keycon = {'87':'up(speed)',
+  									'83':'up(-speed)',
+  									'68':'left(-speed)',
+  									'65':'left(speed)',
+
+  									'107':'speedup()',
+  									'109':'speeddown()'
+  								};
+      
+  		function init(){
+  				fang = {x:0,y:0,h:30,w:30};
+  				draw();
+
+  		}
+
+  		function draw(){
+  				ctx.beginPath();
+  				ctx.lineWidth="4";
+  				ctx.strokeStyle="#4860DA";
+  				ctx.rect(fang.x,fang.y,fang.h,fang.w);
+  				ctx.stroke();
+  				ctx.closePath();
+  		}
+
+
+  		function up(a){
+  			ctx.clearRect(fang.x-parseInt(ctx.lineWidth/2),fang.y-parseInt(ctx.lineWidth/2),fang.h+parseInt(ctx.lineWidth),fang.w+parseInt(ctx.lineWidth));
+  			fang.y -=a;
+  			draw();
+  		}
+
+  		function left(a){
+  			ctx.clearRect(fang.x-parseInt(ctx.lineWidth/2),fang.y-parseInt(ctx.lineWidth/2),fang.h+parseInt(ctx.lineWidth),fang.w+parseInt(ctx.lineWidth));
+  			fang.x -= a;
+  			draw();
+  		}
+
+  		function speedup(){
+  			speed++;
+  		}
+
+  		function speeddown(){
+  			speed--;
+  		}
+  		document.onkeydown =  function(e){
+  			eval(keycon[(e?e:event).keyCode]);
+  		};
+  		init();
+      // setInterval("draw()",1000);
+    
+  	</script>
+  </body>
+  </html>
