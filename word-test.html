@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+<title>Hello World</title>
+
+<style>
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html, 
+body {
+	height: 100%;
+	position: relative;
+	width: 100%;
+}
+
+body {
+	background: #eee;
+}
+
+canvas {
+	background: white;
+	display: block;
+}
+
+#c {
+	/*left: 50%;*/
+	position: absolute;
+	/*top: 50%;*/
+	/*transform: translate(-50%, -50%);*/
+}</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<script>
+
+	(function(){
+		
+	var canvas = document.getElementById('c');
+	var ctx = canvas.getContext('2d');
+	canvas.width = window.innerWidth ;
+	canvas.height = window.innerHeight ;
+
+	ctx.font = "bold 70px Sans-serif";
+	ctx.textAlign = 'center';
+	ctx.baseline = 'middle';
+	ctx.fillText('H E L L O   W O R L D',window.innerWidth/2,window.innerHeight/2);
+	var imgData = ctx.getImageData(0,0,window.innerWidth,window.innerHeight);
+	
+	 for(var i=0;i<imgData.data.length;i+=4){
+
+		
+			
+			if(imgData.data[i+3] === 0){
+				imgData.data[i]=131;
+				imgData.data[i+1]=72;
+				imgData.data[i+2]=72;
+				imgData.data[i+3]=100;
+			}
+				
+				
+			
+		
+	}
+	ctx.putImageData(imgData,0,0);
+})();
+</script>
+</body>
+</html>
