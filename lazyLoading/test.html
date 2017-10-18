@@ -1,0 +1,23 @@
+<body style="height:2000px;">
+<script>
+
+	var debounce = function(delay,func){
+		var last;
+// 这样做可以不污染全局变量
+// 看看js变量的作用域链
+		return function(){
+			console.log("last:"+last);
+			clearTimeout(last);
+			console.log("here");
+			last = setTimeout(func,delay);
+		}
+	}
+
+
+// 注意传入addEventListener的应该是函数句柄
+	window.addEventListener("scroll",debounce(1000,
+		function(){
+			console.log("it works");
+	}),false);
+</script>
+</body>

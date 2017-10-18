@@ -1,0 +1,75 @@
+<body>
+<canvas style="position: absolute;"></canvas>
+
+<script>
+	;(function(){
+		var box = function(x,y,w,h,sx,sy){
+			this.x = x;
+			this.y = y;
+			this.w = w;
+			this.h = h;
+			this.sx = sx;
+			this.sy = sy;
+		};
+
+		box.prototype = {
+			constructor : box,
+
+			update : function(){
+				this.x += this.sx;
+				this.y += this.sy;
+				if(this.x > WIDTH)this.x = 0;
+				else if(this.x<0)this.x = WIDTH;
+				if(this.y > HEIGHT) this.y = 0;
+				else if(this.y < 0) this.y = HEIGHT;
+
+			},
+
+			render : function(ctx){
+				ctx.fillStyle='rgba(100,100,100,1)';
+				ctx.fillRect(this.x,this.y,this.w,this.h);
+			}
+		};
+
+		var canvas = document.getElementsByTagName('canvas');
+		canvas = canvas[0];
+		var ctx = canvas.getContext('2d');
+
+		var WIDTH = canvas.width= window.innerWidth;
+		var HEIGHT = canvas.height = window.innerHeight;
+
+		var b = new box(0,0,10,10,1,1);
+
+		// requestAnimationFrame
+		function loop(){
+			ctx.globalCompositeOperation = 'source-over';
+			ctx.fillStyle = 'rgba(0,0,0,0.5)';
+			ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+			ctx.globalCompositeOperation = 'lighter';
+			b.update();
+			b.render(ctx);
+			requestAnimationFrame(loop);
+		};
+
+
+		// 普通递归 很不6
+		// function loop(){
+		// 	ctx.globalCompositeOperation = 'source-over';
+		// 	ctx.fillStyle = 'rgba(0,0,0,0.5)';
+		// 	ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+		// 	ctx.globalCompositeOperation = 'lighter';
+		// 	b.update();
+		// 	b.render(ctx);
+		// 	loop();
+		// };
+
+		loop();
+ 		
+
+
+
+	})();
+</script>
+</body>
